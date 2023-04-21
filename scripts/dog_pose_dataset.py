@@ -18,11 +18,12 @@ from transformers import Blip2Processor, Blip2ForConditionalGeneration
 import tqdm
 import glob
 
-try:
-    import torch_xla.core.xla_model as xm
-    _xla_available = True
-except ImportError:
-    _xla_available=False
+#try:
+#    import torch_xla.core.xla_model as xm
+#    _xla_available = True
+#except ImportError:
+
+_xla_available=False
     
 #table = pd.read_parquet('dataset/00000.parquet')
 
@@ -98,7 +99,7 @@ def draw_pose(
     landmark_list: Any,
     connections: Any,
     overlay: bool = True,
-) -> tuple[np.ndarray, dict[str, list[float]]]:
+):# -> tuple[np.ndarray, dict[str, list[float]]]:
     """Draws the landmarks and the connections on the image.
 
     Args:
@@ -212,20 +213,20 @@ def determine_pose(image):
 
 if torch.cuda.is_available():
     device="cuda"
-elif _xla_available:
-    device=xm.xla_device()
+#elif _xla_available:
+#    device=xm.xla_device()
 else:
     device="cpu"
 print('torch device', device)
 
 processor = Blip2Processor.from_pretrained("Salesforce/blip2-flan-t5-xl")
 captioning_model = Blip2ForConditionalGeneration.from_pretrained(
-    "Salesforce/blip2-flan-t5-xl", torch_dtype=torch.float16
+    "Salesforce/blip2-flan-t5-xl", torch_dtype=torch.float32
 )
 captioning_model = captioning_model.to(device)
 
 
-def generate_captions(images: np.ndarray) -> list[str]:
+def generate_captions(images: np.ndarray):# -> list[str]:
     """Generates captions for a batch of images.
 
     Args:
@@ -234,7 +235,7 @@ def generate_captions(images: np.ndarray) -> list[str]:
     Returns:
         A list of generated captions.
     """
-    inputs = processor(images=images, return_tensors="pt").to(device, torch.float16)
+    inputs = processor(images=images, return_tensors="pt").to(device, torch.float32)
 
     generated_ids = captioning_model.generate(**inputs)
     generated_texts = processor.batch_decode(generated_ids, skip_special_tokens=True)
@@ -262,7 +263,7 @@ def write_caption(
     with open(f'{base_path}.caption.txt', 'w') as f:
         f.write(caption+'\n')
         
-dataset_path = 'dataset'
+dataset_path = '/mnt/disks/persist/base_dataset'
 
 # Get the list of all image paths in the dataset
 image_paths = glob.glob(f'{dataset_path}/**/*.jpg', recursive=True)
@@ -276,8 +277,8 @@ for img_path in tqdm.tqdm(image_paths):
     orig_image, overlaid_annotation, blank_annotation = determine_pose(image)
 
     # Generate a hash for the image path to use as a unique identifier
-    caption = generate_captions(image)
-    write_caption(img_path, caption[0])
+#    caption = generate_captions(image)
+#    write_caption(img_path, caption[0])
     
     # Save the images
     save_image(img_path, overlaid_annotation, blank_annotation)
