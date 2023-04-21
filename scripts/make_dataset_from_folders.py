@@ -8,9 +8,7 @@ import tqdm
 import numpy as np
 from imageio import imread
 
-from datasets import Dataset, Features
-from datasets import Image as ImageFeature
-from datasets import Value
+import jsonlines
 
 dataset_path = '/mnt/disks/persist/dataset'
 
@@ -52,8 +50,13 @@ def gen_examples():
                 "caption": all_generated_captions[i],
             }
 
-            
 
+with jsonlines.open(f'{dataset_path}/meta.jsonl', 'w') as writer:
+    for meta in gen_examples:
+        writer.write(meta)
+    
+
+"""
 final_dataset = Dataset.from_generator(
     gen_examples,
     features=Features(
@@ -67,3 +70,4 @@ final_dataset = Dataset.from_generator(
 
 ds_name = "animalposes-controlnet-dataset"
 final_dataset.to_jsonl(f'{dataset_path}/{ds_name}.jsonl')
+"""
