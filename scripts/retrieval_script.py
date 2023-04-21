@@ -46,4 +46,4 @@ def download_query_file(query_file, output_dir):
     )
 if __name__=="__main__":
     make_query_list('query.csv', 5000)
-    download_query_file('query.csv', ' /mnt/disks/persist/basic_dataset/')
+    download_query_file('query.csv', ' /mnt/disks/persist/dataset/')
