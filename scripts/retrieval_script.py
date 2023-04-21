@@ -6,12 +6,12 @@ import numpy as np
 import csv
 
 
-def make_query_list(query_file):
+def make_query_list(query_file, num_images=1000):
 #    query_list = [f"a {animal} {verb}" for animal in ['cat','dog','cow','sheep','horse','panda','deer', 'rhino'] for verb in ['standing', 'walking', 'sitting', 'running']]
     query_list = [f"a photo of a {animal} {verb}" for animal in ['cat','dog'] for verb in ['standing', 'walking']]
 
     query_file = open('query.csv', 'w')
-    client = ClipClient(url="https://knn.laion.ai/knn-service", indice_name="laion5B-L-14", num_images=20, )
+    client = ClipClient(url="https://knn.laion.ai/knn-service", indice_name="laion5B-L-14", num_images=num_images, )
 #    query_file =f'{query}.csv'
 
     writer = csv.writer(query_file)
@@ -45,5 +45,5 @@ def download_query_file(query_file, output_dir):
         min_image_size=256,
     )
 if __name__=="__main__":
-    make_query_list('query.csv')
+    make_query_list('query.csv', 5000)
     download_query_file('query.csv', 'dataset')
