@@ -27,7 +27,7 @@ for path in tqdm.tqdm(image_directory_paths):
     for s in samples:
         annotated_image_path = os.path.splitext(s)[0]+'.overlaid.jpg' 
         
-        condition_image_path = os.path.splitext(s)[0]+'.condition.jpg' 
+        condition_image_path = os.path.splitext(s)[0]+'.condition.png' 
 
         with open(os.path.splitext(s)[0]+'.txt', 'r') as f:
             caption = f.readline().strip()
@@ -52,7 +52,7 @@ def gen_examples():
 
 
 with jsonlines.open(f'{dataset_path}/meta.jsonl', 'w') as writer:
-    for meta in gen_examples:
+    for meta in gen_examples():
         writer.write(meta)
     
 
