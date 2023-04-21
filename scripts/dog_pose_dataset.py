@@ -253,7 +253,15 @@ def save_image(
     PIL.Image.fromarray(blank_annotation).save(
         os.path.join(f"{base_path}.condition.png")
     )
-    
+
+def write_caption(
+        image_path: str,
+        caption: str
+    ):
+    base_path = os.path.splitext(image_path)[0]
+    with open(f'{base_path}.caption.txt', 'w') as f:
+        f.write(caption+'\n')
+        
 dataset_path = 'dataset'
 
 # Get the list of all image paths in the dataset
@@ -269,6 +277,7 @@ for img_path in tqdm.tqdm(image_paths):
 
     # Generate a hash for the image path to use as a unique identifier
     caption = generate_captions(image)
+    write_caption(img_path, caption[0])
     
     # Save the images
     save_image(img_path, overlaid_annotation, blank_annotation)
