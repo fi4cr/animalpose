@@ -1,0 +1,22 @@
+-f https://storage.googleapis.com/jax-releases/libtpu_releases.html
+jax[tpu]==0.4.5
+flax==0.6.7
+transformers
+clip_retrieval==2.36.1
+chex
+datasets
+diffusers @ git+https://github.com/huggingface/diffusers.git
+huggingface_hub
+imageio==2.27.0
+img2dataset==1.41.0
+jsonlines==3.1.0
+numpy
+opencv_python_headless
+openpifpaf==0.13.11
+optax
+pandas
+Pillow
+tqdm==4.65.0
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==1.13.1
+torchvision==0.14.1
